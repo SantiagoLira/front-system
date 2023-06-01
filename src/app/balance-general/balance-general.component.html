@@ -1,0 +1,25 @@
+<h2>Generar Balance General</h2>
+
+<form (ngSubmit)="submitForm()" #balanceForm="ngForm">
+  <div>
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" name="fecha" required [(ngModel)]="fecha">
+  </div>
+
+  <div>
+    <label for="activos">Activos:</label>
+    <input type="number" id="activos" name="activos" required [(ngModel)]="activos">
+  </div>
+
+  <div>
+    <label for="pasivos">Pasivos:</label>
+    <input type="number" id="pasivos" name="pasivos" required [(ngModel)]="pasivos">
+  </div>
+
+  <div>
+    <label for="patrimonioNeto">Patrimonio Neto:</label>
+    <input type="number" id="patrimonioNeto" name="patrimonioNeto" required [(ngModel)]="patrimonioNeto">
+  </div>
+
+  <button type="submit" [disabled]="!balanceForm.form.valid">Guardar Balance</button>
+</form>
