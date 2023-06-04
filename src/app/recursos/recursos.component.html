@@ -1,0 +1,56 @@
+<form (ngSubmit)="guardarRecursos()">
+  <div>
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha" name="fecha" [(ngModel)]="fecha" (change)="mostrartabla()">
+  </div>
+  <div>
+    <label for="nombre">Nombre del recurso:</label>
+    <input type="text" id="nombre" [(ngModel)]="nombre" name="nombre" />
+  </div>
+  <div>
+    <label for="costo">Costo:</label>
+    <input type="text" id="nombre" [(ngModel)]="costo" name="costo" />
+  </div>
+  <div>
+    <label for="categoria">Categoría:</label>
+    <select id="categoria" [(ngModel)]="categoria" name="categoria">
+      <option value="activoC">Activo Circulante</option>
+      <option value="activo">Activo Fijo</option>
+      <option value="activoD">Activo Diferido</option>
+      <option value="pasivoC">Pasivo Circulante</option>
+      <option value="pasivo">Pasivo Largo Plazo</option>
+      <option value="capital">Capital</option>
+    </select>
+  </div>
+  <button type="submit">Guardar</button>
+</form>
+
+<!-- <h2>Tabla Activo</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Categoria</th>
+      <th>Nombre</th>
+      <th>costo</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of activo">
+      <td>{{ item.nombre }}</td>
+      <td>{{ item.nombre }}</td>
+      <td>{{ item.precio }}</td>
+    </tr> 
+  </tbody>
+</table> -->
+
+<div *ngFor="let categoria of categorias">
+  <h3>{{ categoria }}</h3>
+  <ul>
+    <li *ngFor="let item of itemsPorCategoria[categoria]">
+      {{ item.nombre }} - {{ item.costo }}
+    </li>
+  </ul>
+</div>
+
+

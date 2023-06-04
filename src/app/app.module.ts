@@ -6,11 +6,13 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BalanceGeneralComponent } from './balance-general/balance-general.component';
 import { FormsModule } from '@angular/forms';
+import { RecursosComponent } from './recursos/recursos.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BalanceGeneralComponent
+    BalanceGeneralComponent,
+    RecursosComponent
   ],
   imports: [
     HttpClientModule,
