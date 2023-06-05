@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
+
 interface Item {
   nombre: string;
   costo: number;
@@ -25,6 +26,7 @@ interface Data {
 })
 export class RecursosComponent {
   mostrarTabla: boolean = false;
+  mostrarAlerta: boolean = false;
   fecha: string = '';
   nombre: string = '';
   costo: number = 0;
@@ -54,14 +56,16 @@ export class RecursosComponent {
 
     this.http.post('http://127.0.0.1:3000/balance', recurso).subscribe(
       (response) => {
-        console.log('Guardado exitoso');
+        
       },
       (error) => {
         console.error('Error al guardar el balance:', error);
       }
     );
+    this.mostrarAlerta = true;
+    this.mostrarTabla = true;
 
-    this.mostrartabla();
+    
   }
   mostrartabla() {
     this.http

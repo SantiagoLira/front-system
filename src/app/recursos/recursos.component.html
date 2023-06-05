@@ -1,4 +1,8 @@
 <div class="container ">
+  <div class="alert alert-primary alert-dismissible fade show text-center" role="alert" *ngIf="mostrarAlerta">
+    <strong>Guardado Exitoso! </strong> 
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
   <div class="row">
     <div class="col-4">
       <div
@@ -15,8 +19,8 @@
                 id="fecha"
                 class="form-control"
                 name="fecha"
+                (change)=" mostrartabla()"
                 [(ngModel)]="fecha"
-                (change)="mostrartabla()"
               />
             </div>
             <div>
@@ -55,12 +59,14 @@
                 <option value="capital">Capital</option>
               </select>
             </div>
-            <button type="submit" class="btn btn-primary my-3">Guardar</button>
+            <button type="submit" class="btn btn-primary my-3" id="liveAlertBtn">Guardar</button>
           </form>
         </div>
       </div>
     </div>
+
     <div class="col-8" *ngIf="mostrarTabla">
+      <button type="button" class="btn btn-primary my-3" (click)="mostrartabla()">Actualizar</button>
       <!-- Tablas por categoría -->
       <div class="shadow border p-3 mb-5 bg-body-tertiary rounded">
         <div class="row align-items-start">
