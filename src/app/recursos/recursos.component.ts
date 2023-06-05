@@ -1,12 +1,21 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-
 interface Item {
   nombre: string;
   costo: number;
   categoria: string;
   _id: string;
+}
+interface Category {
+  items: Item[];
+  sumaCostos: number;
+}
+interface Data {
+  _id: string;
+  fecha: string;
+  items: Item[];
+  __v: number;
 }
 
 @Component({
@@ -15,13 +24,23 @@ interface Item {
   styleUrls: ['./recursos.component.css'],
 })
 export class RecursosComponent {
+  mostrarTabla: boolean = false;
   fecha: string = '';
   nombre: string = '';
   costo: number = 0;
-  categoria: string = '';
-  items: any[] = [];
-  categorias: string[] = [];
-  itemsPorCategoria: { [categoria: string]: Item[] } = {};
+  newcategoria: string = '';
+  jsonData: Data[] = [];
+  categorias: string[] = [
+    'activoC',
+    'activo',
+    'activoD',
+    'pasivoC',
+    'pasivo',
+    'capital',
+  ];
+  itemsPorCategoria: { [categoria: string]: Category } = {};
+  sumaTotal1to3: number = 0;
+  sumaTotal4to6: number = 0;
 
   constructor(private http: HttpClient) {}
   guardarRecursos() {
@@ -29,7 +48,7 @@ export class RecursosComponent {
       fecha: this.fecha,
       nombre: this.nombre,
       costo: this.costo,
-      categoria: this.categoria,
+      categoria: this.newcategoria,
     };
     console.log(recurso);
 
@@ -45,37 +64,54 @@ export class RecursosComponent {
     this.mostrartabla();
   }
   mostrartabla() {
-
-    this.categorias = [];
-    this.itemsPorCategoria = {};
-
     this.http
       .get<any>('http://127.0.0.1:3000/balance', {
         params: {
           fecha: this.fecha,
         },
       })
-      .subscribe((data) => {
-        this.items = data;
-        this.items.forEach((data: any)=>{
-          data.items.forEach((item: any)=> {
-            if (!this.categorias.includes(item.categoria)) {
-              this.categorias.push(item.categoria);
-              this.itemsPorCategoria[item.categoria] = [];
-            }
-            this.itemsPorCategoria[item.categoria].push(item);
+      .subscribe(
+        (data) => {
+          const response: Data[] = data;
+          this.jsonData = response;
 
-          });
-
-        });
-        console.log(this.items);
-        
-        
-      },
-      (error) => {
-        console.error('Error al obtener el recurso', error);
-      }
+          this.separarPorCategoria();
+          this.calcularSumaTotales();
+          this.mostrarTabla = true;
+        },
+        (error) => {
+          console.error('Error al obtener el recurso', error);
+        }
       );
-   
+  }
+  separarPorCategoria(): void {
+    this.categorias.forEach((categoria: string) => {
+      this.itemsPorCategoria[categoria] = {
+        items: [],
+        sumaCostos: 0,
+      };
+    });
+
+    this.jsonData.forEach((data: Data) => {
+      data.items.forEach((item: Item) => {
+        if (this.itemsPorCategoria.hasOwnProperty(item.categoria)) {
+          this.itemsPorCategoria[item.categoria].items.push(item);
+          this.itemsPorCategoria[item.categoria].sumaCostos += item.costo;
+        }
+      });
+    });
+  }
+  calcularSumaTotales(): void {
+    this.sumaTotal1to3 = 0;
+    this.sumaTotal4to6 = 0;
+
+    for (let i = 0; i < this.categorias.length; i++) {
+      const categoria = this.categorias[i];
+      if (['activoC', 'activo', 'activoD'].includes(categoria)) {
+        this.sumaTotal1to3 += this.itemsPorCategoria[categoria].sumaCostos;
+      } else {
+        this.sumaTotal4to6 += this.itemsPorCategoria[categoria].sumaCostos;
+      }
+    }
   }
 }

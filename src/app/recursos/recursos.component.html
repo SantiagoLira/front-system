@@ -1,56 +1,147 @@
-<form (ngSubmit)="guardarRecursos()">
-  <div>
-    <label for="fecha">Fecha:</label>
-    <input type="date" id="fecha" name="fecha" [(ngModel)]="fecha" (change)="mostrartabla()">
+<div class="container ">
+  <div class="row">
+    <div class="col-4">
+      <div
+        class="card border p-2 mb-2 border-opacity-25 shadow p-3 mb-5 bg-body-tertiary rounded"
+        style="width: 18rem"
+      >
+        <div class="card-body">
+          <h5 class="card-title">Nuevo elemento</h5>
+          <form (ngSubmit)="guardarRecursos()">
+            <div class="mb-3">
+              <label for="fecha" class="form-label">Fecha:</label>
+              <input
+                type="date"
+                id="fecha"
+                class="form-control"
+                name="fecha"
+                [(ngModel)]="fecha"
+                (change)="mostrartabla()"
+              />
+            </div>
+            <div>
+              <label for="nombre" class="form-label">Nombre del recurso:</label>
+              <input
+                type="text"
+                id="nombre"
+                class="form-control"
+                [(ngModel)]="nombre"
+                name="nombre"
+              />
+            </div>
+            <div>
+              <label for="costo" class="form-label">Costo:</label>
+              <input
+                type="text"
+                id="nombre"
+                class="form-control"
+                [(ngModel)]="costo"
+                name="costo"
+              />
+            </div>
+            <div>
+              <label for="categoria" class="form-label">Categoría:</label>
+              <select
+                id="categoria"
+                [(ngModel)]="newcategoria"
+                name="categoria"
+                class="form-select"
+              >
+                <option value="activoC">Activo Circulante</option>
+                <option value="activo">Activo Fijo</option>
+                <option value="activoD">Activo Diferido</option>
+                <option value="pasivoC">Pasivo Circulante</option>
+                <option value="pasivo">Pasivo Largo Plazo</option>
+                <option value="capital">Capital</option>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary my-3">Guardar</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-8" *ngIf="mostrarTabla">
+      <!-- Tablas por categoría -->
+      <div class="shadow border p-3 mb-5 bg-body-tertiary rounded">
+        <div class="row align-items-start">
+          <div class="col">
+            <ng-container *ngFor="let categoria of categorias.slice(0, 3)">
+              <h1></h1>
+              <h2 *ngIf="categoria === 'activoC'">Activo Circulante</h2>
+              <h2 *ngIf="categoria === 'activo'">Activo Fijo</h2>
+              <h2 *ngIf="categoria === 'activoD'">Activo Diferido</h2>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Costo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of itemsPorCategoria[categoria]?.items">
+                    <td>{{ item.nombre }}</td>
+                    <td>{{ item.costo | currency }}</td>
+                  </tr>
+                </tbody>
+                <tfoot class="table-warning">
+                  <tr>
+                    <td colspan="2">
+                      Suma de Costos:
+                      {{ itemsPorCategoria[categoria].sumaCostos | currency }}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </ng-container>
+          </div>
+          <div class="col p-2">
+            <ng-container *ngFor="let categoria of categorias.slice(3)">
+              <h2 *ngIf="categoria === 'pasivoC'">Pasivo Circulante</h2>
+              <h2 *ngIf="categoria === 'pasivo'">Pasivo</h2>
+              <h2 *ngIf="categoria === 'capital'">Capital</h2>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Costo</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let item of itemsPorCategoria[categoria]?.items">
+                    <td>{{ item.nombre }}</td>
+                    <td>{{ item.costo | currency }}</td>
+                  </tr>
+                </tbody>
+                <tfoot class="table-warning">
+                  <tr>
+                    <td colspan="2">
+                      Suma de Costos:
+                      {{ itemsPorCategoria[categoria].sumaCostos | currency }}
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </ng-container>
+          </div>
+          <div class="col">
+            <h2>Suma Total</h2>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Activos</th>
+                  <th scope="col">Pasivo + Capital</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td scope="row">{{ sumaTotal1to3 | currency }}</td>
+                  <td scope="row">{{ sumaTotal4to6 | currency }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div>
-    <label for="nombre">Nombre del recurso:</label>
-    <input type="text" id="nombre" [(ngModel)]="nombre" name="nombre" />
-  </div>
-  <div>
-    <label for="costo">Costo:</label>
-    <input type="text" id="nombre" [(ngModel)]="costo" name="costo" />
-  </div>
-  <div>
-    <label for="categoria">Categoría:</label>
-    <select id="categoria" [(ngModel)]="categoria" name="categoria">
-      <option value="activoC">Activo Circulante</option>
-      <option value="activo">Activo Fijo</option>
-      <option value="activoD">Activo Diferido</option>
-      <option value="pasivoC">Pasivo Circulante</option>
-      <option value="pasivo">Pasivo Largo Plazo</option>
-      <option value="capital">Capital</option>
-    </select>
-  </div>
-  <button type="submit">Guardar</button>
-</form>
-
-<!-- <h2>Tabla Activo</h2>
-
-<table>
-  <thead>
-    <tr>
-      <th>Categoria</th>
-      <th>Nombre</th>
-      <th>costo</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let item of activo">
-      <td>{{ item.nombre }}</td>
-      <td>{{ item.nombre }}</td>
-      <td>{{ item.precio }}</td>
-    </tr> 
-  </tbody>
-</table> -->
-
-<div *ngFor="let categoria of categorias">
-  <h3>{{ categoria }}</h3>
-  <ul>
-    <li *ngFor="let item of itemsPorCategoria[categoria]">
-      {{ item.nombre }} - {{ item.costo }}
-    </li>
-  </ul>
 </div>
-
-
